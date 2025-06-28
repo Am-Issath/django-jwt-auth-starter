@@ -35,10 +35,15 @@ class LogoutView(APIView):
             token = RefreshToken(refresh_token)
             token.blacklist()
 
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        
+            username = request.user.username
+            return Response(
+                {"message": f"User '{username}' was logged out successfully"},
+                status=status.HTTP_200_OK
+            )
+
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
         
 
 class AdminOnlyView(APIView):
