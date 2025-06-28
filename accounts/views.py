@@ -7,8 +7,11 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
+from rest_framework import generics
 
 from accounts.permissions import IsAdmin
+from accounts.serializers import RegisterSerializer
+from accounts.models import CustomUser
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -43,3 +46,8 @@ class AdminOnlyView(APIView):
 
     def get(self, request):
         return Response({"message": "Hello, Admin!"})
+
+
+class RegisterView(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = RegisterSerializer
