@@ -32,139 +32,121 @@ Supports login/logout, token blacklisting, refresh token rotation, and role-base
 
 ```bash
 git clone [https://github.com/your-username/django-jwt-auth-rbac.git](https://github.com/your-username/django-jwt-auth-rbac.git)
+
 cd django-jwt-auth-rbac
+```
 
 ### 2. Create Virtual Environment
 
 ```bash
 python -m venv venv
 source venv/bin/activate  # For Windows: venv\Scripts\activate
+```
 
-3. Install Dependencies
-Bash
-
+### 3. Install Dependencies
+```bash
 pip install -r requirements.txt
-4. Run Migrations
-Bash
+``` 
 
+### 4. Run Migrations
+
+```bash
 python manage.py makemigrations
 python manage.py migrate
-5. Create Superuser (Optional)
-Bash
+``` 
 
+### 5. Create Superuser (Optional)
+
+```bash
 python manage.py createsuperuser
-🔑 Auth Endpoints
-Endpoint
+```
 
-Method
+### 6. 🚀 Run server
 
-Auth Required
+```bash
+python manage.py runserver
+```
 
-Description
+## 🔐 JWT Endpoints
 
-/api/token/
+### ✅ Login
 
-POST
-
-❌
-
-Login — returns access + refresh
-
-/api/token/refresh/
-
-POST
-
-❌
-
-Get new access token using refresh
-
-/api/register/
-
-POST
-
-❌
-
-Register new user with role
-
-/api/logout/
-
-POST
-
-✅
-
-Logout (blacklist refresh token)
-
-/api/admin-only/
-
-GET
-
-✅ + Admin
-
-Admin-only endpoint
-
-
-Export to Sheets
-🔐 JWT Auth Flow
-Login via /api/token/ to get access & refresh tokens.
-
-Send access_token in every subsequent request header:
-Authorization: Bearer <access_token>
-
-When the access token expires, use the refresh_token at /api/token/refresh/ to obtain a new access token.
-
-To logout: Call /api/logout/ with the refresh token in the request body.
-
-🛡️ Role-Based Access Control (RBAC)
-The CustomUser model includes a role field (admin, seller, customer). Protected views leverage custom permissions:
-
-Python
-
-permission_classes = [IsAuthenticated, IsAdmin]
-You can easily create seller-only or customer-only views by using IsSeller or IsCustomer permissions respectively.
-
-🧪 Testing the APIs (Manually or Postman)
-🔐 Login
+```http
 POST /api/token/
-
-JSON
+Content-Type: application/json
 
 {
   "username": "admin",
   "password": "yourpassword"
 }
-🛑 Logout
+```
+
+#### Response:
+```json
+{
+  "access": "access_token_here",
+  "refresh": "refresh_token_here",
+  "username": "admin",
+  "role": "admin"
+}
+```
+
+### 🔁 Refresh Token
+
+```http
+POST /api/token/refresh/
+Content-Type: application/json
+
+{
+  "refresh": "<your_refresh_token>"
+}
+
+```
+
+### 🚪 Logout (Blacklist Refresh Token)
+
+```http
 POST /api/logout/
-
-Headers:
 Authorization: Bearer <access_token>
-
-Body:
-
-JSON
+Content-Type: application/json
 
 {
   "refresh": "<refresh_token>"
 }
-👮 Admin Only
-GET /api/admin-only/
+```
 
-Headers:
-Authorization: Bearer <access_token>
+### 🧑 Register
 
-If the user is not an admin, the API will return:
-
-JSON
+```http
+POST /api/register/
+Content-Type: application/json
 
 {
-  "detail": "You do not have permission to perform this action."
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "yourpass",
+  "role": "seller"  # or 'admin' / 'customer'
 }
-📌 Settings
-Relevant settings in your settings.py:
+```
 
-Python
+### 🔒 Admin-only Endpoint
 
-# settings.py
+```http
+GET /api/admin-only/
+Authorization: Bearer <admin_access_token>
+```
 
+#### Expected Response (Admin Only):
+```json
+{
+  "message": "Hello, Admin!"
+}
+```
+
+# 🔐 JWT Configuration
+
+In settings.py:
+```python 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -174,15 +156,27 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKEN': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+```
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+# 🔐 JWT Auth Flow
 
+1. Login via /api/token/ to get access & refresh tokens.
 
-✍️ Author
+2. Send access_token in every subsequent request header:
+```Authorization: Bearer <access_token>```
+
+3. When the access token expires, use the refresh_token at /api/token/refresh/ to obtain a new access token.
+
+4. To logout: Call /api/logout/ with the refresh token in the request body.
+
+# 🛡️ Role-Based Access Control (RBAC)
+
+The CustomUser model includes a role field (admin, seller, customer). Protected views leverage custom permissions:
+
+# ✍️ Author
 Built with ❤️ by Issath
 Backend Engineer · Blogger · Builder
-
