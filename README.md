@@ -26,19 +26,6 @@ Supports login/logout, token blacklisting, refresh token rotation, and role-base
 
 ---
 
-## 📁 Project Structure
-
-accounts/
-│
-├── models.py         # CustomUser with role field
-├── views.py          # Login, Logout, Register, Admin-only view
-├── serializers.py    # Register serializer
-├── permissions.py    # Custom IsAdmin / IsSeller / IsCustomer
-└── urls.py           # Auth endpoints
-
-
----
-
 ## ⚙️ Setup Instructions
 
 ### 1. Clone the Repo
@@ -46,11 +33,13 @@ accounts/
 ```bash
 git clone [https://github.com/your-username/django-jwt-auth-rbac.git](https://github.com/your-username/django-jwt-auth-rbac.git)
 cd django-jwt-auth-rbac
-2. Create Virtual Environment
-Bash
 
+### 2. Create Virtual Environment
+
+```bash
 python -m venv venv
 source venv/bin/activate  # For Windows: venv\Scripts\activate
+
 3. Install Dependencies
 Bash
 
