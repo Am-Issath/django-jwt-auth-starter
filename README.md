@@ -31,9 +31,9 @@ Supports login/logout, token blacklisting, refresh token rotation, and role-base
 ### 1. Clone the Repo
 
 ```bash
-git clone [https://github.com/your-username/django-jwt-auth-rbac.git](https://github.com/your-username/django-jwt-auth-rbac.git)
+git clone https://github.com/Am-Issath/django-jwt-auth-starter.git
 
-cd django-jwt-auth-rbac
+cd django-jwt-auth-starter
 ```
 
 ### 2. Create Virtual Environment
