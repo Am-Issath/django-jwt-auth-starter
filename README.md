@@ -178,5 +178,5 @@ SIMPLE_JWT = {
 The CustomUser model includes a role field (admin, seller, customer). Protected views leverage custom permissions:
 
 # ✍️ Author
-Built with ❤️ by Issath
-Backend Engineer · Blogger · Builder
+## Built with ❤️ by Issath
+### Backend Engineer · Blogger · Builder
